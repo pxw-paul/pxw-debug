@@ -2,7 +2,7 @@ ROUTINE PXW.Debuggers.Macros [Type=INC]
 #dim %pxwdebug as PXW.Debuggers.Basic
 
 #;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-#If $G(^PXW.Debuggers("ENABLED"))=1
+#If ($G(^PXW.Debuggers("DISABLED"),0)=0)
 
 /// record a message to the debug log
 #define DEBUG(%message) d:$$$debugIsON $$$debugObject.DEBUG(%message) 
@@ -40,7 +40,7 @@ ROUTINE PXW.Debuggers.Macros [Type=INC]
 #define DEBUGMethodBegin 
 #define DEBUGMethodEnd 
 #define DEBUGStop 
-#define DEBUGisON 0
+#define debugIsON 0
 #define debugObject %pxwdebug
 #EndIf
 

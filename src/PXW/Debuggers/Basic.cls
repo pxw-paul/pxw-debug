@@ -1,13 +1,6 @@
 Class PXW.Debuggers.Basic Extends %RegisteredObject
 {
 
-/*
-/// Called when something needs to log progress etc
-Method LOG(message As %String)
-{
-	Write message,!
-}
-*/
 /// Tends to be called more often with all sorts of data passed in
 Method DEBUG(message As %String)
 {

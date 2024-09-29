@@ -5,20 +5,6 @@ Property currentIO As %String;
 
 Property file As %String;
 
-/*
-/// Called when something needs to log progress etc, not as clever as DEBUG, only simple messages expected
-Method LOG(message As %String)
-{
-   
-    Do ..UseFile()
-    Try {
-    	Write message,!
-    } Catch e {
-    }
-    Do ..UseIO()
-}
-*/
-/// Tends to be called more often with all sorts of data passed in
 Method DEBUG(message As %String)
 {
     Do ..UseFile()
@@ -56,6 +42,10 @@ Method UseFile(ForcedFilename As %String)
             Set filename=ForcedFilename
         } Else {
             Set filedir=^PXW.Debuggers("BasicToFile")
+            if ##class(%Library.File).DirectoryExists(filedir)=0 {
+                set sc=##class(%File).CreateDirectory(^PXW.Debuggers("BasicToFile"),.ret)
+                set ^PXW.Debuggers("BasicToFile","dirCreated")=$lb(sc,ret,$h)
+            }
             Set filename=filedir_"debug_"_$TRANSLATE($ZDATETIME($HOROLOG,8,1)," :","_")_"_"_$JOB_".txt"
         }
         Set ..file=filename

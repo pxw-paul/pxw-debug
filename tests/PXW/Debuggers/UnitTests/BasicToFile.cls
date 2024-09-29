@@ -3,6 +3,23 @@ Include PXW.Debuggers.Macros
 Class PXW.Debuggers.UnitTests.BasicToFile Extends %UnitTest.TestCase
 {
 
+Method MethodContainingMacros()
+{
+    $$$DEBUGMethodBegin
+    Set x=1
+    Write "hello"
+    $$$DEBUG("x="_x)
+    $$$DEBUGMethodEnd
+}
+
+Method MethodContainingStackMacro()
+{
+    $$$DEBUG("STACK: begin")
+    $$$DEBUGStack 
+    write "goodbye"
+    $$$DEBUG("STACK: end")
+}
+
 Method TestDebuggingOff()
 {
     ; Output of basic debugging goes to the current device so create a tempfile to capture
@@ -34,7 +51,9 @@ Method TestDebuggingOff()
 Method TestDebuggingOn()
 {
     #dim debugger as PXW.Debuggers.BasicToFile
-    set olddir=##class(PXW.Debuggers.BasicToFile).SetDirectory("/tmp/")
+    if ##class(PXW.Debuggers.BasicToFile).GetDirectory()="" {
+        set olddir=##class(PXW.Debuggers.BasicToFile).SetDirectory("/tmp/")
+    }
     ; turn on debugging
     $$$DEBUGNew("PXW.Debuggers.BasicToFile")
     
@@ -79,14 +98,16 @@ Method TestDebuggingOn()
     If $GET(tempfile)'="" Do ##class(%Library.File).Delete(tempfile,.return),..LogMessage("delete temp="_return)
     If $GET(debugfilename)'="" Do ##class(%Library.File).Delete(debugfilename,.return),..LogMessage("delete debug="_return)
 
-    do ##class(PXW.Debuggers.BasicToFile).SetDirectory(olddir)
+    do:$d(olddir) ##class(PXW.Debuggers.BasicToFile).SetDirectory(olddir)
     Do $$$AssertStatusOK(sc)
 }
 
 Method TestDebuggingStack()
 {
     #dim debugger as PXW.Debuggers.BasicToFile
-    set olddir=##class(PXW.Debuggers.BasicToFile).SetDirectory("/tmp/")
+    if ##class(PXW.Debuggers.BasicToFile).GetDirectory()="" {
+        set olddir=##class(PXW.Debuggers.BasicToFile).SetDirectory("/tmp/")
+    }
     ; turn on debugging
     $$$DEBUGNew("PXW.Debuggers.BasicToFile")
 
@@ -131,26 +152,36 @@ Method TestDebuggingStack()
     If $GET(tempfile)'="" Do ##class(%Library.File).Delete(tempfile,.return),..LogMessage("delete temp="_return)
     If $GET(debugfilename)'="" Do ##class(%Library.File).Delete(debugfilename,.return),..LogMessage("delete debug="_return)
 
-    do ##class(PXW.Debuggers.BasicToFile).SetDirectory(olddir)
+    do:$d(olddir) ##class(PXW.Debuggers.BasicToFile).SetDirectory(olddir)
 
     Do $$$AssertStatusOK(sc)
 }
 
-Method MethodContainingMacros()
+Method TestToSpecificFile()
 {
-    $$$DEBUGMethodBegin
-    Set x=1
-    Write "hello"
-    $$$DEBUG("x="_x) 
-    $$$DEBUGMethodEnd
-}
+    
+    set debug=##class(PXW.Debuggers.BasicToFile).%New()
+    set debugfilename=debug.GetDirectory()_"unittest.txt"
+    do debug.SetFilename(debugfilename)
+    $$$DEBUGNew(debug)
+    do ..MethodContainingMacros()
 
-Method MethodContainingStackMacro()
-{
-    $$$DEBUG("STACK: begin")
-    $$$DEBUGStack
-    write "goodbye"
-    $$$DEBUG("STACK: end")
+    set debugfilename=debug.file
+    do $$$AssertEquals(debug.file,debugfilename)
+
+    k debug
+    $$$DEBUGStop
+
+    set debugfile=##class(%Library.File).%New(debugfilename)
+    Do debugfile.Open("R")
+    Set line1=debugfile.ReadLine()
+    Do $$$AssertEquals(line1,"Begin PXW.Debuggers.UnitTests.BasicToFile:MethodContainingMacros")
+
+    Set line2=debugfile.ReadLine()
+    Do $$$AssertEquals(line2,"x=1")
+
+    Set line3=debugfile.ReadLine()
+    Do $$$AssertEquals(line3,"End PXW.Debuggers.UnitTests.BasicToFile:MethodContainingMacros")
 }
 
 }

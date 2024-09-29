@@ -3,6 +3,21 @@ Include PXW.Debuggers.Macros
 Class PXW.Debuggers.UnitTests.Basic Extends %UnitTest.TestCase
 {
 
+Method MethodContainingMacros()
+{
+    $$$DEBUGMethodBegin
+    Set x=1
+    $$$DEBUG("x="_x) 
+    $$$DEBUGMethodEnd
+}
+
+Method MethodContainingStackMacro()
+{
+    $$$DEBUG("STACK: begin")
+    $$$DEBUGStack
+    $$$DEBUG("STACK: end")
+}
+
 Method TestDebuggingOff()
 {
     ; Output of basic debugging goes to the current device so create a tempfile to capture
@@ -112,21 +127,6 @@ Method TestDebuggingStack()
     If $GET(tempfile)'="" Do ##class(%Library.File).Delete(tempfile)
 
     Do $$$AssertStatusOK(sc)
-}
-
-Method MethodContainingMacros()
-{
-    $$$DEBUGMethodBegin
-    Set x=1
-    $$$DEBUG("x="_x) 
-    $$$DEBUGMethodEnd
-}
-
-Method MethodContainingStackMacro()
-{
-    $$$DEBUG("STACK: begin")
-    $$$DEBUGStack
-    $$$DEBUG("STACK: end")
 }
 
 }
