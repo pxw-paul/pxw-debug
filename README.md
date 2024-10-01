@@ -39,6 +39,35 @@ You could put your debug messages to anywhere you like simply by creating a subc
 ## Example usage.
 This is best used in a test harness where the test sets up the debug to use and calls the method being tested. The output from the debug can be checked. When the method runs for real no debug output will be generated because the debug will not be on. 
 
+```
+classmethod RunTest(DebugTo="") {
+
+    if DebugTo="FILE" {
+        set deblog="PXW.Debuggers.BasicToFile"
+    } elseif DebugTo="SCREEN" {
+        set deblog="PXW.Debuggers.Basic"
+    } else {
+        set deblog=""
+    }
+    if deblog'="" $$$DEBUGNew(deblog)
+
+    set object=##class(PXW.Debuggers.UnitTests.Example).%New()
+    do object.MethodContainingMacros()
+    
+    if $$$debugIsON zw $$$debugObject
+    $$$DEBUGStop
+}
+Method MethodContainingMacros()
+{
+    $$$DEBUGMethodBegin
+    write "running method",!
+    Set x=1
+    $$$DEBUG("x="_x) 
+    write "ending method",!
+    $$$DEBUGMethodEnd
+}
+```
+The test harness
 
 
 
