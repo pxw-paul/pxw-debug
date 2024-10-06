@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Export generator="Cache" version="25">
-  <Document name="dc-sample.ZPM">
+  <Document name="pxw-debug.ZPM">
     <Module>
-      <Name>dc-sample</Name>
-      <Version>2.0.4</Version>
-      <Description>Basic InterSystems IRIS Development Template</Description>
+      <Name>pxw-debug</Name>
+      <Version>1.0.0</Version>
+      <Description>PXW Debug macros</Description>
       <Packaging>module</Packaging>
       <SourcesRoot>src</SourcesRoot>
-      <Resource Name="dc.sample.PKG"/>
-      <UnitTest Name="/tests" Package="dc.sample.unittests" Phase="test"/>
+      <Resource Name="PXW.Debuggers.PKG"/>
+      <UnitTest Name="/tests" Package="PXW.Debuggers.UnitTests" Phase="test"/>
 
     </Module>
   </Document>

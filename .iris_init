@@ -1,3 +1,5 @@
+:alias debugon Do ##class(PXW.Debuggers.Basic).On() ;
+:alias debugoff Do ##class(PXW.Debuggers.Basic).Off() ;
 :alias enablebi do EnableDeepSee^%SYS.cspServer("/csp/"_$zcvt($namespace,"L")) ;
 :alias ssl x "n $namespace set $namespace=""%SYS"", name=$S(""$1""="""":""DefaultSSL"",1:""$1"") do:'##class(Security.SSLConfigs).Exists(name) ##class(Security.SSLConfigs).Create(name)" ;
 :alias createdb do $SYSTEM.SQL.Execute("CREATE DATABASE $1") ;
