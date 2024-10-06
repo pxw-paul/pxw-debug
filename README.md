@@ -33,7 +33,7 @@ You could instead use another debug log that creates a file and writes the messa
 ```
     $$$DEBUGNew("PXW.Debuggers.BasicToFile")
 ```
-See the class itself to see how to control where the files go.
+See the class itself to see how to control where the files are written.
 
 ## Debug to other places.
 You could put your debug messages to anywhere you like simply by creating a subclass of PXW.Debuggers.Basic and overwrite the DEBUG method. Eg. it would be very simple to log the messages in a global or database. 
