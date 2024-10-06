@@ -159,12 +159,23 @@ Method TestDebuggingStack()
 
 Method TestToSpecificFile()
 {
-    
     set debug=##class(PXW.Debuggers.BasicToFile).%New()
     set debugfilename=debug.GetDirectory()_"unittest.txt"
     do debug.SetFilename(debugfilename)
+    
+    ; Note this is passing in a debug object as an object rather than a name
     $$$DEBUGNew(debug)
-    do ..MethodContainingMacros()
+    
+    Set io=$IO
+    Set tempfile=##class(%File).TempFilename("txt")
+    Try {
+        Open tempfile:"WN"
+        Use tempfile  
+        do ..MethodContainingMacros()
+        
+    } catch e {
+    }
+    Close tempfile
 
     set debugfilename=debug.file
     do $$$AssertEquals(debug.file,debugfilename)

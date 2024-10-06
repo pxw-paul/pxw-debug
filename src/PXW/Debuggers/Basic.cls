@@ -1,3 +1,5 @@
+Include PXW.Debuggers.Macros
+
 Class PXW.Debuggers.Basic Extends %RegisteredObject
 {
 
@@ -21,6 +23,16 @@ Method DEBUGStack()
 		Set $EXTRACT(com,maxcom+1)="",$EXTRACT(pla,maxpla+1)=""
 		Do ..DEBUG("STACK:"_$JUSTIFY(i,3)_":"_com_":"_pla_":"_mco)
 	}
+}
+
+ClassMethod On()
+{
+	$$$DEBUGSetup(..%ClassName(1))
+}
+
+ClassMethod Off()
+{
+	$$$DEBUGStop
 }
 
 }

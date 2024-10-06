@@ -41,7 +41,8 @@ Method UseFile(ForcedFilename As %String)
         If $DATA(ForcedFilename) {
             Set filename=ForcedFilename
         } Else {
-            Set filedir=^PXW.Debuggers("BasicToFile")
+            ; allow this to crash if the directory is not set up
+            Set filedir=^PXW.Debuggers("BasicToFile") 
             if ##class(%Library.File).DirectoryExists(filedir)=0 {
                 set sc=##class(%File).CreateDirectory(^PXW.Debuggers("BasicToFile"),.ret)
                 set ^PXW.Debuggers("BasicToFile","dirCreated")=$lb(sc,ret,$h)

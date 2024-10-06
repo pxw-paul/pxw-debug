@@ -24,7 +24,7 @@
     set ^UnitTestRoot="/usr/irissys/.vscode/IRISAPP/UnitTestRoot"
 
     /// Set up debug log directory
-    set ^PXW.Debuggers("DISABLED")=0
+    set ^PXW.Debuggers("ENABLED")=1
     set ^PXW.Debuggers("BasicToFile")="/home/irisowner/dev/debug/"
   
     zpm "load /home/irisowner/dev/ -v":1:1

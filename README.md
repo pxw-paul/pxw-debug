@@ -21,9 +21,11 @@ When your code is run the macros will do nothing unless you have turned debug on
 Once this macro is run the debugging macro will be active.
 
 ## How does it work?
+The macros only work if ^PXW.Debuggers("ENABLED")=1.
+
 The $$$DEBUGNew macro sets a %variable to an object.
 
-The $$$DEBUG macro checks the variable is set, if it is then the .DEBUG() method.
+The $$$DEBUG macro checks the variable is set, if it is then calls the .DEBUG() method.
 
 ## What happens to the message?
 The $$$DEBUGNew("") macro by default sets the object to PXW.Debuggers.Basic which will just write the message to the current device.
@@ -40,6 +42,8 @@ You could put your debug messages to anywhere you like simply by creating a subc
 This is best used in a test harness where the test sets up the debug to use and calls the method being tested. The output from the debug can be checked. When the method runs for real no debug output will be generated because the debug will not be on. 
 
 ```
+Include PXW.Debuggers.Macros
+
 classmethod RunTest(DebugTo="") {
 
     if DebugTo="FILE" {
@@ -61,17 +65,25 @@ Method MethodContainingMacros()
 {
     $$$DEBUGMethodBegin
     write "running method",!
-    Set x=1
-    $$$DEBUG("x="_x) 
+    for x=1:1:10 {
+        $$$DEBUG("x="_x) 
+    }
     write "ending method",!
     $$$DEBUGMethodEnd
 }
 ```
-The test harness
+## Finally
+Because the marcos are constantly checking for the existence of an object even when there is no active debugger they take a little bit of time.
 
+Once all the debugging is done you can disable all the macros with:
+```
+SET ^PXW.Debuggers("ENABLED")=0
+or
+KILL ^PXW.Debuggers("ENABLED")
+```
+Then recompile everything. The macros will then not compile any code and will add that little bit more speed.
 
-
-
+Note to self: After a bit of to-ing and fro-ing I decided on ENABLING rather than DISABLING, but that may change...
 
 ## Prerequisites
 Make sure you have [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) and [Docker desktop](https://www.docker.com/products/docker-desktop) installed.
@@ -110,3 +122,27 @@ Enter HALT or H (not case-sensitive)
 
 
 ## Running unit tests
+
+Use ZPM to run the tests
+```
+zpm:IRISAPP>test pxw-debug
+
+[IRISAPP|pxw-debug]     Reload START (/home/irisowner/dev/)
+[IRISAPP|pxw-debug]     Reload SUCCESS
+[pxw-debug]     Module object refreshed.
+[IRISAPP|pxw-debug]     Validate START
+[IRISAPP|pxw-debug]     Validate SUCCESS
+[IRISAPP|pxw-debug]     Compile START
+[IRISAPP|pxw-debug]     Compile SUCCESS
+[IRISAPP|pxw-debug]     Activate START
+[IRISAPP|pxw-debug]     Configure START
+[IRISAPP|pxw-debug]     Configure SUCCESS
+[IRISAPP|pxw-debug]     Activate SUCCESS
+[IRISAPP|pxw-debug]     Test START
+Use the following URL to view the result:
+http://172.23.0.4:52773/csp/sys/%25UnitTest.Portal.Indices.cls?Index=5&$NAMESPACE=IRISAPP
+All PASSED
+
+[IRISAPP|pxw-debug]     Test SUCCESS
+```
+The test cover the basic and the basic to file classes. The tests use all of the macros available the. 
