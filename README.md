@@ -149,4 +149,4 @@ All PASSED
 
 [IRISAPP|pxw-debug]     Test SUCCESS
 ```
-The test cover the basic and the basic to file classes. The tests use all of the macros available the. 
+The test cover the basic and the basic to file classes. 
