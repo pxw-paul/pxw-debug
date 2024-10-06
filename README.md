@@ -77,7 +77,7 @@ Method MethodContainingMacros()
 }
 ```
 ## Finally
-Because the marcos are constantly checking for the existence of an object even when there is no active debugger they take a little bit of time.
+Because the marcos are constantly checking for the existence of an object even when there is no active debug logging they take a little bit of time.
 
 Once all the debugging is done you can disable all the macros with:
 ```
