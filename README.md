@@ -41,6 +41,7 @@ You could put your debug messages to anywhere you like simply by creating a subc
 ## Example usage.
 This is best used in a test harness where the test sets up the debug to use and calls the method being tested. The output from the debug can be checked. When the method runs for real no debug output will be generated because the debug will not be on. 
 
+The test harness:
 ```
 Include PXW.Debuggers.Macros
 
@@ -61,6 +62,9 @@ classmethod RunTest(DebugTo="") {
     if $$$debugIsON zw $$$debugObject
     $$$DEBUGStop
 }
+```
+The code where logging is required:
+```
 Method MethodContainingMacros()
 {
     $$$DEBUGMethodBegin
@@ -73,7 +77,7 @@ Method MethodContainingMacros()
 }
 ```
 ## Finally
-Because the marcos are constantly checking for the existence of an object even when there is no active debugger they take a little bit of time.
+Because the marcos are constantly checking for the existence of an object even when there is no active debug logging they take a little bit of time.
 
 Once all the debugging is done you can disable all the macros with:
 ```
