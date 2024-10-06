@@ -97,7 +97,7 @@ Make sure you have [git](https://git-scm.com/book/en/v2/Getting-Started-Installi
 Clone/git pull the repo into any local directory
 
 ```
-$ git clone https://github.com/intersystems-community/intersystems-iris-dev-template.git
+$ git clone https://github.com/pxw-paul/pxw-debug.git
 ```
 
 Open the terminal in this directory and call the command to build and run InterSystems IRIS in container:
