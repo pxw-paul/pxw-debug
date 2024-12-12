@@ -44,8 +44,8 @@ Method UseFile(ForcedFilename As %String)
             ; allow this to crash if the directory is not set up
             Set filedir=^PXW.Debuggers("BasicToFile") 
             if ##class(%Library.File).DirectoryExists(filedir)=0 {
-                set sc=##class(%File).CreateDirectory(^PXW.Debuggers("BasicToFile"),.ret)
-                set ^PXW.Debuggers("BasicToFile","dirCreated")=$lb(sc,ret,$h)
+                set sc=##class(%File).CreateDirectory(^PXW.Debuggers("BasicToFile"),.created)
+                set ^PXW.Debuggers("BasicToFile","dirCreated")=$lb(sc,created,$h)
             }
             Set filename=filedir_"debug_"_$TRANSLATE($ZDATETIME($HOROLOG,8,1)," :","_")_"_"_$JOB_".txt"
         }
