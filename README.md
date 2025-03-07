@@ -7,12 +7,12 @@ How often have you written code the logs where your code has got to and trace va
 ```
 Then you have to remove them later. 
 
-These macros replace this sort of thing with 
+These macros replace this sort of thing with:
 ```
     $$$DEBUG("at this point x="_x)
 ```
 
-When your code is run the macros will do nothing unless you have turned debug on. To do this call the macro
+When your code is run the macros will do nothing unless you have turned debug on. To do this call the macro:
 ```
     $$$DEBUGNew("")
 ```
@@ -76,6 +76,81 @@ Method MethodContainingMacros()
     $$$DEBUGMethodEnd
 }
 ```
+## Pause/Resume.
+If you had a method (A) that uses debugging and that calls another method (B) that also uses debugging then you might want to pause debugging while the method B is running. 
+EG.
+```
+Class Program1
+    ClassMethod Method A() {
+        $$$DEBUG("Calling B")
+        set result=##class(Program2).B()
+        $$$DEBUG("The result of B is "_result)
+    }
+
+Class Program2
+    ClassMethod B() as %Integer {
+        for i=1:1:100 {
+            $$$DEBUG("i="_i)
+        }
+        quit i
+    }
+```
+This would result in the debug output:
+```
+Calling B
+i=1
+i=2
+...
+i=100
+The result of B is 100
+```
+The 100 lines of text output by B gets in the way of what you are actually trying to debug. To resolve this you can pause debugging:
+```
+ClassMethod A() {
+    $$$DEBUG("Calling B")
+    $$$DEBUGPause
+    set result=##class(Program2).B()
+    $$$DEBUGResume
+    $$$DEBUG("The result of B is "_result)
+}
+```
+## Full list of macros
+
+### Logging
+
+These macros would generally be used in the code being developed. They should be treated as commands.
+
+Macro            | Description
+:-----           | :---------
+DEBUG(message)   | Record the given message to the debug log.
+DEBUGMethodBegin | Record the the start of the current method to the debug log.
+DEBUGMethodEnd   | Record the the end of the current method to the debug log.
+DEBUGStack       | Record the stack to the debug log.
+DEBUGBreak       | Break if debugging.
+DEBUGSC(sc,exp)  | Set sc to the given expression, if the result is an error, log it to the debug log.
+
+### Control
+
+These macros would be used in the test harness to switch on debugging. They should be treated as commands.
+
+Macro            | Description
+:-----           | :---------
+DEBUGNew(class ) | Create a NEWed variable containing an instance of the given class. When the method quits the debug session will end.
+DEBUGSetup(class)| Create a variable instance of the given class. The class could also be a pre-defined object, where complex setup of the debug session is required.
+DEBUGStop        | Stops the debug session.
+DEBUGPause       | Pause the debug session. It can be resumed later.
+DEBUGResume      | Resume a previously paused debug.
+
+### Others
+
+These macros are used internally but may be useful to the test harness in certain situations. They are expressions, not commands.
+
+Macro            | Description
+:-----           | :---------
+debugIsON        | Test if the debugging is on.
+debugObject      | The variable containing the debug object.
+
+
 ## Finally
 Because the marcos are constantly checking for the existence of an object even when there is no active debug logging they take a little bit of time.
 
@@ -87,7 +162,7 @@ KILL ^PXW.Debuggers("ENABLED")
 ```
 Then recompile everything. The macros will then not compile any code and will add that little bit more speed.
 
-Note to self: After a bit of to-ing and fro-ing I decided on ENABLING rather than DISABLING, but that may change...
+Note to self: After a bit of to-ing and fro-ing I decided on ENABLING rather than DISABLING, but that may change... The current thinking is: debug would be ENABLED in a dev environment. When the code is delivered to a new environment (eg live) the debugging will not be enabled and no debug code will be generated.
 
 ## Prerequisites
 Make sure you have [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) and [Docker desktop](https://www.docker.com/products/docker-desktop) installed.

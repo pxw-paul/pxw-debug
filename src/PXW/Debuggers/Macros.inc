@@ -24,6 +24,9 @@ ROUTINE PXW.Debuggers.Macros [Type=INC]
 /// If debugging break.
 #define DEBUGBreak break:$$$debugIsON
 
+/// Set sc to the given expression, if the result is an error, log it to the debug log.
+#define DEBUGSC(%sc,%expr) s %sc=%expr i $$$ISERR(%sc) $$$DEBUG(##Quote(%expr)_" "_$SYSTEM.Status.GetErrorText(%sc))
+
 #;----------- Macros used by the test harness to turn debugging on/off ----------------
 
 /// create a new debugger instance.
@@ -33,6 +36,12 @@ ROUTINE PXW.Debuggers.Macros [Type=INC]
 
 /// No need to stop like this if you are using DEBUGNew, as the debugger will disappear on quit.
 #define DEBUGStop k $$$debugObject
+
+/// Pause debug so it can be resumed later
+#define DEBUGPause i $$$debugIsON { s %pxwdebpaused=$$$debugObject $$$DEBUGStop }
+
+/// Resume debug
+#define DEBUGResume i $ISOBJECT($g(%pxwdebpaused)) { s $$$debugObject=%pxwdebpaused k %pxwdebpaused }
 
 #define debugIsON $isobject($g($$$debugObject))
 
@@ -45,9 +54,12 @@ ROUTINE PXW.Debuggers.Macros [Type=INC]
 #define DEBUGMethodEnd 
 #define DEBUGStack
 #define DEBUGBreak 
+#define DEBUGSC(%sc,%expr) s %sc=%expr
 #define DEBUGNew(%class) 
 #define DEBUGSetup(%class) 
 #define DEBUGStop  
+#define DEBUGPause
+#define DEBUGResume
 #define debugIsON 0
 #define debugObject %pxwdeb
 #EndIf
