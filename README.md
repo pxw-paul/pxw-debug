@@ -19,7 +19,7 @@ When your code is run the macros will do nothing unless you have turned debug on
 
 Once this macro is run the debugging macro will be active.
 
-### Install via ZPM
+### Install via ZPM.
 
 ```
 zpm "install pxw-debug"
@@ -31,7 +31,7 @@ Object                       | Use
 PXW.Debuggers.Macros.inc     | Include this in classes that need to be debugged and the test harness.
 PXW.Debuggers.Basic.cls      | A basic debugger object, output goes to tha current device. The macros will make use of this.
 PXW.Debuggers.BasicToFile.cls| Extends the Basic debug to send the results to a file.
-PXW.Debuggers.Console.cls    | Extends the Basic debug to send the results to a the system console log.
+PXW.Debuggers.Console.cls    | Extends the Basic debug to send the results to the system console log.
 
 ## How does it work?
 
@@ -134,9 +134,9 @@ ClassMethod A() {
     $$$DEBUG("The result of B is "_result)
 }
 ```
-## Full list of macros
+## Full list of macros.
 
-### Logging
+### Logging.
 
 These macros would generally be used in the code being developed. They should be treated as commands.
 
@@ -149,7 +149,7 @@ DEBUGStack       | Record the stack to the debug log.
 DEBUGBreak       | Break if debugging.
 DEBUGSC(sc,exp)  | Set sc to the given expression, if the result is an error, log it to the debug log.
 
-### Control
+### Control.
 
 These macros would be used in the test harness to switch on debugging. They should be treated as commands.
 
@@ -161,7 +161,7 @@ DEBUGStop        | Stops the debug session.
 DEBUGPause       | Pause the debug session. It can be resumed later.
 DEBUGResume      | Resume a previously paused debug.
 
-### Others
+### Others.
 
 These macros are used internally but may be useful to the test harness in certain situations. They are expressions, not commands.
 
@@ -171,7 +171,7 @@ debugIsON        | Test if the debugging is on.
 debugObject      | The variable containing the debug object.
 
 
-## Finally
+## Finally.
 Because the marcos are constantly checking for the existence of an object even when there is no active debug logging they take a little bit of time.
 
 Once all the debugging is done you can disable all the macros with:
@@ -185,7 +185,7 @@ Then recompile everything. The macros will then not compile any code and will ad
 Note to self: After a bit of to-ing and fro-ing I decided on ENABLING rather than DISABLING, but that may change... The current thinking is: debug would be ENABLED in a dev environment. When the code is delivered to a new environment (eg live) the debugging will not be enabled and no debug code will be generated.
 
 
-## Docker
+## Docker.
 
 Make sure you have [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) and [Docker desktop](https://www.docker.com/products/docker-desktop) installed.
 
@@ -218,7 +218,7 @@ To exit the terminal, do any of the following:
 Enter HALT or H (not case-sensitive)
 ```
 
-## Running unit tests
+## Running unit tests.
 
 Use ZPM to run the tests
 ```
