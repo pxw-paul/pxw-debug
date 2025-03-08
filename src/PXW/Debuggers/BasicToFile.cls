@@ -1,6 +1,8 @@
 Class PXW.Debuggers.BasicToFile Extends PXW.Debuggers.Basic
 {
 
+Property AddDateTime As %Boolean [ InitialExpression = 0 ];
+
 Property currentIO As %String;
 
 Property file As %String;
@@ -9,7 +11,7 @@ Method DEBUG(message As %String)
 {
     Do ..UseFile()
     Try {
-        Write message,!
+        Write $SELECT(..AddDateTime:$ZDATETIME($HOROLOG,3,1)_" ",1:"")_message,!
     } Catch e {
     }
     Do ..UseIO()
@@ -43,9 +45,9 @@ Method UseFile(ForcedFilename As %String)
         } Else {
             ; allow this to crash if the directory is not set up
             Set filedir=^PXW.Debuggers("BasicToFile") 
-            if ##class(%Library.File).DirectoryExists(filedir)=0 {
-                set sc=##class(%File).CreateDirectory(^PXW.Debuggers("BasicToFile"),.created)
-                set ^PXW.Debuggers("BasicToFile","dirCreated")=$lb(sc,created,$h)
+            If ##class(%Library.File).DirectoryExists(filedir)=0 {
+                Set sc=##class(%File).CreateDirectory(^PXW.Debuggers("BasicToFile"),.created)
+                Set ^PXW.Debuggers("BasicToFile","dirCreated")=$LISTBUILD(sc,created,$HOROLOG)
             }
             Set filename=filedir_"debug_"_$TRANSLATE($ZDATETIME($HOROLOG,8,1)," :","_")_"_"_$JOB_".txt"
         }
