@@ -17,26 +17,41 @@ When your code is run the macros will do nothing unless you have turned debug on
     $$$DEBUGNew("")
 ```
 
-
 Once this macro is run the debugging macro will be active.
 
+### Install via ZPM
+
+```
+zpm "install pxw-debug"
+set ^PXW.Debuggers("ENABLED")=1 ; enable the macros
+```
+This will install:
+Object                       | Use
+:----------------------------|:-----------------
+PXW.Debuggers.Macros.inc     | Include this in classes that need to be debugged and the test harness.
+PXW.Debuggers.Basic.cls      | A basic debugger object, output goes to tha current device. The macros will make use of this.
+PXW.Debuggers.BasicToFile.cls| Extends the Basic debug to send the results to a file.
+PXW.Debuggers.Console.cls    | Extends the Basic debug to send the results to a the system console log.
+
 ## How does it work?
+
 The macros only work if ^PXW.Debuggers("ENABLED")=1.
 
 The $$$DEBUGNew macro sets a %variable to an object.
 
-The $$$DEBUG macro checks the variable is set, if it is then calls the .DEBUG() method.
+The $$$DEBUG macro checks the variable is set, if it is then calls the .DEBUG() method of the object.
 
 ## What happens to the message?
+
 The $$$DEBUGNew("") macro by default sets the object to PXW.Debuggers.Basic which will just write the message to the current device.
-You could instead use another debug log that creates a file and writes the message there.
+You could, instead, use another debug log object that creates a file and writes the message there.
 ```
     $$$DEBUGNew("PXW.Debuggers.BasicToFile")
 ```
 See the class itself to see how to control where the files are written.
 
 ## Debug to other places.
-You could put your debug messages to anywhere you like simply by creating a subclass of PXW.Debuggers.Basic and overwrite the DEBUG method. Eg. it would be very simple to log the messages in a global or database. 
+You could put your debug messages to anywhere you like simply by creating a subclass of PXW.Debuggers.Basic and overwrite the DEBUG method. Eg. it would be very simple to log the messages in a global or table. 
 
 ## Example usage.
 This is best used in a test harness where the test sets up the debug to use and calls the method being tested. The output from the debug can be checked. When the method runs for real no debug output will be generated because the debug will not be on. 
@@ -45,12 +60,17 @@ The test harness:
 ```
 Include PXW.Debuggers.Macros
 
-classmethod RunTest(DebugTo="") {
-
-    if DebugTo="FILE" {
-        set deblog="PXW.Debuggers.BasicToFile"
-    } elseif DebugTo="SCREEN" {
+classmethod RunTest(DebugTo="") 
+{
+    if DebugTo="SCREEN" {
         set deblog="PXW.Debuggers.Basic"
+    } elseif DebugTo="FILE" {
+        ; You may pass in an object to the New macro giving 
+        ; more control of the debug object.
+        set deblog=##class(PXW.Debuggers.BasicToFile).%New()
+        set deblog.AddDateTime=1
+    } elseif DebugTo="CONSOLE" {
+        set deblog="PXW.Debuggers.Console"
     } else {
         set deblog=""
     }
@@ -164,10 +184,10 @@ Then recompile everything. The macros will then not compile any code and will ad
 
 Note to self: After a bit of to-ing and fro-ing I decided on ENABLING rather than DISABLING, but that may change... The current thinking is: debug would be ENABLED in a dev environment. When the code is delivered to a new environment (eg live) the debugging will not be enabled and no debug code will be generated.
 
-## Prerequisites
-Make sure you have [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) and [Docker desktop](https://www.docker.com/products/docker-desktop) installed.
 
-## Installation
+## Docker
+
+Make sure you have [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) and [Docker desktop](https://www.docker.com/products/docker-desktop) installed.
 
 Clone/git pull the repo into any local directory
 
@@ -197,8 +217,6 @@ To exit the terminal, do any of the following:
 ```
 Enter HALT or H (not case-sensitive)
 ```
-
-
 
 ## Running unit tests
 
