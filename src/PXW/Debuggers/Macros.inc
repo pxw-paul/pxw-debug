@@ -38,10 +38,10 @@ ROUTINE PXW.Debuggers.Macros [Type=INC]
 #define DEBUGStop k $$$debugObject
 
 /// Pause debug so it can be resumed later
-#define DEBUGPause i $$$debugIsON { s %pxwdebpaused=$$$debugObject $$$DEBUGStop }
+#define DEBUGPause i $$$debugIsON { s pxwdebpaused=$$$debugObject $$$DEBUGStop }
 
 /// Resume debug
-#define DEBUGResume i $ISOBJECT($g(%pxwdebpaused)) { s $$$debugObject=%pxwdebpaused k %pxwdebpaused }
+#define DEBUGResume i $ISOBJECT($g(pxwdebpaused)) { s $$$debugObject=pxwdebpaused k pxwdebpaused }
 
 #define debugIsON $isobject($g($$$debugObject))
 
