@@ -6,8 +6,8 @@ Class PXW.Debuggers.UnitTests.Basic Extends %UnitTest.TestCase
 Method MethodContainingMacros()
 {
     $$$DEBUGMethodBegin
-    Set x=1
-    $$$DEBUG("x="_x) 
+    Set x=1 
+    $$$DEBUGTEXT("x={x}") 
     $$$DEBUGMethodEnd
 }
 
@@ -230,6 +230,32 @@ Method TestDebuggingPauseResume()
         Set sc=e.AsStatus()
     }
     If $GET(tempfile)'="" Do ##class(%Library.File).Delete(tempfile)
+}
+
+Method TestFormatting()
+{
+ 
+    s var1=1,var2="string2"
+    set formatted=$$$debugFormat("No variables")
+    do $$$AssertEquals(formatted,"No variables")
+
+    set formatted=$$$debugFormat("Single variable, var1={var1}")
+    do $$$AssertEquals(formatted,"Single variable, var1=1")
+
+    set formatted=$$$debugFormat("Multi variable, var1={var1},var2=''{var2}''")
+    do $$$AssertEquals(formatted,"Multi variable, var1=1,var2=""string2""")
+
+    set onlyVarFormatted=$$$debugFormat("{var1}")
+    do $$$AssertEquals(onlyVarFormatted,"1")
+
+    set onlyVarFormatted=$$$debugFormat("{var2}")
+    do $$$AssertEquals(onlyVarFormatted,"string2")
+ 
+    set formatted=$$$debugFormat("{var1} is in variable var1, text follows var")
+    do $$$AssertEquals(formatted,"1 is in variable var1, text follows var")
+     
+    set formatted=$$$debugFormat("{var1+99}, var+99 is 100.")
+    do $$$AssertEquals(formatted,"100, var+99 is 100.")
 }
 
 }
