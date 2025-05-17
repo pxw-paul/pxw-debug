@@ -5,35 +5,36 @@ Class PXW.Debuggers.UnitTests.Example Extends %RegisteredObject
 
 ClassMethod RunTest(DebugTo = "")
 {
-    if DebugTo="SCREEN" {
-        set deblog="PXW.Debuggers.Basic"
-    } elseif DebugTo="FILE" {
+    If DebugTo="SCREEN" {
+        Set deblog="PXW.Debuggers.Basic"
+    } ElseIf DebugTo="FILE" {
         ; You may pass in an object to the New macro giving 
         ; more control of the debug object.
-        set deblog=##class(PXW.Debuggers.BasicToFile).%New()
-        set deblog.AddDateTime=1
-    } elseif DebugTo="CONSOLE" {
-        set deblog="PXW.Debuggers.Console"
-    } else {
-        set deblog=""
+        Set deblog=##class(PXW.Debuggers.BasicToFile).%New()
+        Set deblog.AddDateTime=1
+    } ElseIf DebugTo="CONSOLE" {
+        Set deblog="PXW.Debuggers.Console"
+    } Else {
+        Set deblog=""
     }
-    if deblog'="" $$$DEBUGNew(deblog)
+    If deblog'="" $$$DEBUGNew(deblog)
 
-    set object=##class(PXW.Debuggers.UnitTests.Example).%New()
-    do object.MethodContainingMacros()
+    Set object=##class(PXW.Debuggers.UnitTests.Example).%New()
+    Do object.MethodContainingMacros()
     
-    if $$$debugIsON zw $$$debugObject
+    If $$$debugIsON ZWrite $$$debugObject
     $$$DEBUGStop
 }
 
 Method MethodContainingMacros()
 {
+ 
     $$$DEBUGMethodBegin
-    write "running method",!
-    for x=1:1:10 {
+    Write "running method",!
+    For x=1:1:10 {
         $$$DEBUG("x="_x) 
     }
-    write "ending method",!
+    Write "ending method",!
     $$$DEBUGMethodEnd
 }
 

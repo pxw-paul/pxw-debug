@@ -41,6 +41,8 @@ The $$$DEBUGNew macro sets a %variable to an object.
 
 The $$$DEBUG macro checks the variable is set, if it is then calls the .DEBUG() method of the object.
 
+If ^PXW.Debuggers("ENABLED") is not 1, the macros will compile to no code.
+
 ## What happens to the message?
 
 The $$$DEBUGNew("") macro by default sets the object to PXW.Debuggers.Basic which will just write the message to the current device.
@@ -143,6 +145,7 @@ These macros would generally be used in the code being developed. They should be
 Macro            | Description
 :-----           | :---------
 DEBUG(message)   | Record the given message to the debug log.
+DEBUGTEXT(text)  | Record the given text to the debug log. Text can contain {variables}.
 DEBUGMethodBegin | Record the the start of the current method to the debug log.
 DEBUGMethodEnd   | Record the the end of the current method to the debug log.
 DEBUGStack       | Record the stack to the debug log.
@@ -169,7 +172,7 @@ Macro            | Description
 :-----           | :---------
 debugIsON        | Test if the debugging is on.
 debugObject      | The variable containing the debug object.
-
+debugFormat(text)| Formats the text where the contains a string to format that may include variables in {}, eg "Value of x={x}". If the {} do not match then it is likely to cause a compile failure.
 
 ## Finally.
 Because the marcos are constantly checking for the existence of an object even when there is no active debug logging they take a little bit of time.

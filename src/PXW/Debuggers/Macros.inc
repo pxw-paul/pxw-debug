@@ -9,6 +9,9 @@ ROUTINE PXW.Debuggers.Macros [Type=INC]
 /// Record a message to the debug log.
 #define DEBUG(%message) d:$$$debugIsON $$$debugObject.DEBUG(%message) 
 
+/// Record a formatted string to the log.
+#define DEBUGTEXT(%message) d:$$$debugIsON $$$debugObject.DEBUG($$$debugFormat(%message))
+
 /// Record the start of the method to the debug log
 #define DEBUGMethodBegin $$$DEBUG(##safeexpression("""Begin "_%classname_":"_%methodname_""""))
 
@@ -50,6 +53,7 @@ ROUTINE PXW.Debuggers.Macros [Type=INC]
 #;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 #Else
 #define DEBUG(%message) 
+#define DEBUGTEXT(%message) 
 #define DEBUGMethodBegin 
 #define DEBUGMethodEnd 
 #define DEBUGStack
@@ -64,3 +68,8 @@ ROUTINE PXW.Debuggers.Macros [Type=INC]
 #define debugObject %pxwdeb
 #EndIf
 
+/// Format text, text can contain {var}, eg "value of a={a}, value of b={b}" will be expanded to the code to include that string, not calling a routine/class to do formatting for speed and availability of vars
+/// To get double quotes in your output then put '' in the text. EG. $$$debugFormat("string=''{string}''") will give the output string="the value of string".
+/// This is useful enough to be included if debug is switched on or off.
+/// It may be wise to move this to a separate method/routine rather than a complex 1 liner. 
+#define debugFormat(%text) ##safeexpression($xecute("(t,q,o,c,y,z,qq) s f=q_$replace(t,qq,q_q)_q while f[o { s v=$p($p(f,c,1),o,2),a=$p(f,o,1),b=$p(f,c,2,*),d=q_y_v_z_q,f=a_d_b} q f",%text,$c(34),"{","}","_(",")_","''"))
