@@ -72,4 +72,4 @@ ROUTINE PXW.Debuggers.Macros [Type=INC]
 /// To get double quotes in your output then put '' in the text. EG. $$$debugFormat("string=''{string}''") will give the output string="the value of string".
 /// This is useful enough to be included if debug is switched on or off.
 /// It may be wise to move this to a separate method/routine rather than a complex 1 liner. 
-#define debugFormat(%text) ##safeexpression($xecute("(t,q,o,c,y,z,qq) s f=q_$replace(t,qq,q_q)_q while f[o { s v=$p($p(f,c,1),o,2),a=$p(f,o,1),b=$p(f,c,2,*),d=q_y_v_z_q,f=a_d_b} q f",%text,$c(34),"{","}","_(",")_","''"))
+#define debugFormat(%text) ##safeexpression($c(34)_$replace($replace($replace(%text,"''",$c(34,34)),"}",$c(95,34)),"{",$c(34,95))_$c(34))

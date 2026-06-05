@@ -148,18 +148,23 @@ Method TestDebuggingSc()
     Set tempfile=##class(%File).TempFilename("txt")
     Try {
         Open tempfile:"WN"
-        Use tempfile
-
+     
         ; this gets logged: 1 generates error A
+        Use tempfile
         $$$DEBUGSC(sc,..MethodValidatesInput(1))
+        use io
         Do $$$AssertStatusNotOK(sc)
 
         ; this does not: 99 is valid 
+        Use tempfile
         $$$DEBUGSC(sc,..MethodValidatesInput(99))
+        use io
         Do $$$AssertStatusOK(sc)
 
         ; this gets logged: 2 generates error B
+        use tempfile
         $$$DEBUGSC(sc,..MethodValidatesInput(2))
+        use io
         Do $$$AssertStatusNotOK(sc) 
 
         Close tempfile
@@ -175,8 +180,7 @@ Method TestDebuggingSc()
   
         Set line2=file.ReadLine()
         Do $$$AssertEquals(line2,"..MethodValidatesInput(2) ERROR #5001: General purpose error B")
-
-
+ 
     } Catch e {
         Close tempfile
         Use io

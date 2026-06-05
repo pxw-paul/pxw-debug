@@ -3,7 +3,7 @@
   <Document name="pxw-debug.ZPM">
     <Module>
       <Name>pxw-debug</Name>
-      <Version>1.0.3</Version>
+      <Version>1.0.4</Version>
       <Description>PXW Debug macros</Description>
       <Packaging>module</Packaging>
       <SourcesRoot>src</SourcesRoot>
